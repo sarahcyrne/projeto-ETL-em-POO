@@ -98,9 +98,9 @@ python main.py
 ```
 
 Ao final, o script gera um arquivo `.json` para cada combinação de
-estado + variável, na raiz do projeto.
+estado + variável + categoria de sexo, na raiz do projeto.
 
-## Como adicionar mais estados ou variáveis
+## Como adicionar estados, variáveis ou categorias de sexo
 
 Basta editar os dicionários `ESTADOS` e `VARIAVEIS` no início do
 `main.py` — não é necessário alterar `extract.py` nem `load.py`:
@@ -120,5 +120,6 @@ Nordeste: 21-Maranhão, 22-Piauí, 23-Ceará, 24-Rio Grande do Norte,
 
 ## Observação
 
-A pasta do ambiente virtual (`.venv`) **não deve ser enviada** ao
-repositório — ela já está listada no `.gitignore`.
+A pasta do ambiente virtual (`.venv`) **não deve ser enviada** ao repositório — ela já está listada no `.gitignore`.
+
+Os arquivos `.json` gerados pela extração (um para cada combinação de estado, variável e sexo) também estão no `.gitignore` e não são versionados no repositório. Eles são criados automaticamente ao rodar `python main.py`, então não é necessário — nem recomendado — subi-los manualmente pro Git: bastar executar o projeto localmente para gerá-los novamente a qualquer momento.
