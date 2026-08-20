@@ -37,21 +37,18 @@ Cada classe tem uma única responsabilidade (princípio da responsabilidade
 
 ## O que foi adaptado em relação ao código da aula
 
-Em aula, o método `extract_pnadc()` tinha a URL fixa, apenas para a
-variável **4099** (taxa de desocupação) e o estado de **Pernambuco**
-(`N3[26]`). Para resolver o desafio proposto (extrair outros estados e
-outras variáveis **sem duplicar código**), o método foi adaptado para
-receber `variavel` e `localidade` como parâmetros:
+Em aula, o método extract_pnadc() tinha uma URL fixa, apenas para a variável 4099 (taxa de desocupação), o estado de Pernambuco (N3[26]) e todas as categorias de sexo juntas. Para resolver o desafio proposto (extrair outras variáveis, estados e categorias de sexo, sem duplicar código), o método foi adaptado para receber variavel, localidade e sexo como parâmetros:
 
 ```python
-def extract_pnadc(self, variavel, localidade="26"):
+def extract_pnadc(self, variavel, localidade="26", sexo="all"):
     url = (
         "https://servicodados.ibge.gov.br/api/v3/agregados/4093"
         "/periodos/201201-202601"
         f"/variaveis/{variavel}"
-        f"?localidades=N3[{localidade}]&classificacao=2[all]"
+        f"?localidades=N3[{localidade}]&classificacao=2[{sexo}]"
     )
     response = requests.get(url)
+    response.raise_for_status()
     data = response.json()
     return data
 ```
@@ -64,9 +61,17 @@ Assim, a mesma classe/método é reutilizado para:
 | Taxa de participação na força de trabalho | 4096 |
 | Taxa de informalidade | 12466 |
 
+| Sexo	| Código
+|---|---|
+| Total	| 6794
+| Homens	| 4
+| Mulheres | 5
+
 E para os estados que o grupo quiser consultar, bastando informar o
 código IBGE da Unidade da Federação (ex.: 26 = Pernambuco, 23 = Ceará,
 25 = Paraíba etc.).
+
+Também foi adicionado tratamento de erro com raise_for_status(), para que uma falha na API não interrompa a extração das demais combinações — isso é tratado no main.py, que percorre variáveis, estados e categorias de sexo em loop, capturando e reportando erros individualmente sem travar o processo inteiro.
 
 No `main.py`, dois dicionários (`VARIAVEIS` e `ESTADOS`) definem quais
 variáveis e quais estados serão extraídos, e um laço `for` percorre todas
