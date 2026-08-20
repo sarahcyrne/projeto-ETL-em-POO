@@ -21,7 +21,7 @@ class Extract():
     def __init__(self):
         pass
 
-    def extract_pnadc(self, variavel, localidade="26"):
+    def extract_pnadc(self, variavel, localidade="26", sexo="all"):
         """
         Consulta a Tabela 4093 do IBGE (PNAD Contínua trimestral) para uma
         variável e um estado (localidade) específicos.
@@ -33,6 +33,7 @@ class Extract():
                 4099  - Taxa de desocupação
                 4096  - Taxa de participação na força de trabalho
                 12466 - Taxa de informalidade
+                
         localidade : int | str
             Código IBGE do estado (Unidade da Federação - N3).
             Padrão: "26" (Pernambuco, usado como exemplo em aula).
@@ -40,6 +41,14 @@ class Extract():
                 21 - Maranhão   | 22 - Piauí     | 23 - Ceará
                 24 - Rio Grande do Norte | 25 - Paraíba
                 26 - Pernambuco | 27 - Alagoas   | 28 - Sergipe | 29 - Bahia
+
+        sexo : int | str
+        Código da categoria de sexo (classificação 2 da tabela 4093).
+        Padrão: "all" (traz as três categorias juntas na mesma resposta).
+        Códigos do desafio:
+            6794 - Total
+            4    - Homens
+            5    - Mulheres
 
         Retorna
         -------
@@ -49,9 +58,10 @@ class Extract():
             "https://servicodados.ibge.gov.br/api/v3/agregados/4093"
             "/periodos/201201-202601"
             f"/variaveis/{variavel}"
-            f"?localidades=N3[{localidade}]&classificacao=2[all]"
+            f"?localidades=N3[{localidade}]&classificacao=2[{sexo}]"
         )
 
         response = requests.get(url)
+        response.raise_for_status()
         data = response.json()
         return data
